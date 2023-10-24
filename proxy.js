@@ -2,6 +2,7 @@ const http = require("http");
 const httpProxy = require("http-proxy");
 const url = require("url");
 const https = require("https");
+require("dotenv").config();
 
 const proxy = httpProxy.createProxyServer({
   secure: false,
@@ -23,8 +24,9 @@ const server = http.createServer((req, res) => {
 
   const { pathname } = url.parse(req.url);
   const [, videoName, videoClip] = pathname.split("/");
+  const firestoreId = process.env.firestoreId;
 
-  const targetUrl = `https://firebasestorage.googleapis.com/v0/b/project-1-bdfa6.appspot.com/o/videos%2F${videoName}%2F${videoClip}?alt=media`;
+  const targetUrl = `https://firebasestorage.googleapis.com/v0/b/${firestoreId}.appspot.com/o/videos%2F${videoName}%2F${videoClip}?alt=media`;
 
   https
     .get(targetUrl, (storageRes) => {
